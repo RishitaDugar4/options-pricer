@@ -10,6 +10,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 option(OPTIONSPRICER_BUILD_TESTS "Build unit tests" ON)
+option(OPTIONSPRICER_BUILD_BENCHMARKS "Build Google Benchmark suite" ON)
 
 add_subdirectory(src)
 add_subdirectory(apps)
@@ -17,4 +18,8 @@ add_subdirectory(apps)
 if(OPTIONSPRICER_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
+endif()
+
+if(OPTIONSPRICER_BUILD_BENCHMARKS)
+  add_subdirectory(benchmarks)
 endif()

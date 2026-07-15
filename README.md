@@ -8,7 +8,7 @@ A C++ options pricing library and CLI supporting three models:
 
 ## Build
 
-Requires CMake 3.16+ and a C++20 compiler. GoogleTest is fetched automatically for the test suite.
+Requires CMake 3.16+ and a C++20 compiler. GoogleTest and Google Benchmark are fetched automatically for the test and benchmark suites.
 
 ```sh
 cmake -S . -B build
@@ -31,6 +31,21 @@ Run `--help` for the full list of options.
 ctest --test-dir build --output-on-failure
 ```
 
+## Benchmark
+
+```sh
+./build/benchmarks/optionspricer_benchmarks
+```
+
+Covers:
+- `BM_BlackScholesPrice*` / `BM_BlackScholesGreeks` — raw closed-form pricing speed (nanoseconds).
+- `BM_BinomialTreeEuropeanConvergence` — time and absolute error vs. Black-Scholes as step count grows.
+- `BM_BinomialTreeAmerican` — tree cost scaling for early-exercise pricing (no closed form to diff against).
+- `BM_MonteCarloConvergence` — time, standard error, and absolute error vs. Black-Scholes as path count grows.
+- `BM_MonteCarloScalar` vs. `BM_MonteCarloSimd` — head-to-head scalar vs. vectorized (AVX2/NEON) path simulation at matched path counts. The `monte_carlo_simd` line in the output banner reports which vectorized backend (if any) this build compiled.
+
+Pass `--benchmark_filter=Regex` to run a subset, or `--benchmark_format=json` for machine-readable output. See `--help` for the full flag list.
+
 ## Layout
 
 ```
@@ -38,4 +53,5 @@ include/optionspricer/   public headers (Option, BlackScholes, BinomialTree, Mon
 src/                      library implementation
 apps/                     CLI entry point
 tests/                    GoogleTest unit tests
+benchmarks/               Google Benchmark suite
 ```
